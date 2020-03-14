@@ -116,7 +116,7 @@ for(i in 1:max) {
       trimws() -> body_dt
     body_dt<-body_dt[-grep(("<"),body_dt)]
     body_dt<-body_dt[nchar(body_dt)>1]
-    body_dt<-body_dt[-grep("기자",  body_dt)]
+    body_dt<-body_dt[-grep("@",  body_dt)]
     
     tem_dt <- tibble(title_dt,body_dt)
     aticles_dt %>%
