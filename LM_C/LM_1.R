@@ -29,7 +29,7 @@ rm(list=ls())
 
 
 # max page check
-tar<-"https://finance.naver.com/news/news_search.nhn?rcdate=&q=%B7%D4%B5%A5%B8%E2%B9%F6%BD%BA&x=0&y=0&sm=all.basic&pd=1&stDateStart=2020-02-01&stDateEnd=2020-03-14&page=1"
+tar<-"https://finance.naver.com/news/news_search.nhn?rcdate=&q=%B7%D4%B5%A5%B8%E2%B9%F6%BD%BA&x=0&y=0&sm=all.basic&pd=4&stDateStart=2019-01-01&stDateEnd=2019-02-28&page=1"
 
 
 max_page <- function(tar_url) {
@@ -49,9 +49,9 @@ root<-"https://finance.naver.com"
 # 사진있는 기사 크롤링
 
 for(i in 1:max) {
-  tar_url<-paste0("https://finance.naver.com/news/news_search.nhn?rcdate=&q=%B7%D4%B5%A5%B8%E2%B9%F6%BD%BA&x=0&y=0&sm=all.basic&pd=1&stDateStart=2020-02-01&stDateEnd=2020-03-14&page=",i)
+  tar_url<-paste0("https://finance.naver.com/news/news_search.nhn?rcdate=&q=%B7%D4%B5%A5%B8%E2%B9%F6%BD%BA&x=0&y=0&sm=all.basic&pd=4&stDateStart=2019-01-01&stDateEnd=2019-02-28&page=",i)
   print(tar_url)
-  read_html(tar_url,encoding="CP949") %>%
+    read_html(tar_url,encoding="CP949") %>%
     html_nodes("dd.articleSubject a") %>%
     html_attr("href") -> link_list_dd
     
@@ -72,7 +72,7 @@ for(i in 1:max) {
       trimws() -> body_dd
     body_dd<-body_dd[-grep(("<"),body_dd)]
     body_dd<-body_dd[nchar(body_dd)>1]
-    body_dd<-body_dd[-grep("@",body_dd)]
+    body_dd<-body_dd[-grep("@", body_dd)]
     
     tem_dd <- tibble(title_dd,body_dd)
     aticles_dd %>%
@@ -82,16 +82,22 @@ for(i in 1:max) {
     
 }
 
-readr::write_excel_csv(aticles_dd,"RM_200201_200314")
+readr::write_excel_csv(aticles_dd,"RM_190101_190228")
 
 # 사진없는 기사 크롤링
 
+
 for(i in 1:max) {
-  tar_url<-paste0("https://finance.naver.com/news/news_search.nhn?rcdate=&q=%B7%D4%B5%A5%B8%E2%B9%F6%BD%BA&x=0&y=0&sm=all.basic&pd=1&stDateStart=2020-02-01&stDateEnd=2020-03-14&page=",i)
+  tar_url<-paste0("https://finance.naver.com/news/news_search.nhn?rcdate=&q=%B7%D4%B5%A5%B8%E2%B9%F6%BD%BA&x=0&y=0&sm=all.basic&pd=4&stDateStart=2019-01-01&stDateEnd=2019-02-28&page=",i)
   print(tar_url)
-  read_html(tar_url,encoding="CP949") %>%
-    html_nodes("dt.articleSubject a") %>%
-    html_attr("href") -> link_list_dt
+  if(length(which(!is.na(read_html(tar_url,encoding="CP949") %>%
+     html_nodes("dt.articleSubject a")))) == 0) {
+    next
+  } else {
+    read_html(tar_url,encoding="CP949") %>%
+      html_nodes("dt.articleSubject a") %>%
+      html_attr("href") -> link_list_dt
+  }
   
   
   for(j in 1:length(link_list_dt)) {
@@ -110,7 +116,7 @@ for(i in 1:max) {
       trimws() -> body_dt
     body_dt<-body_dt[-grep(("<"),body_dt)]
     body_dt<-body_dt[nchar(body_dt)>1]
-    body_dt<-body_dt[-grep("@",body_dt)]
+    body_dt<-body_dt[-grep("기자",  body_dt)]
     
     tem_dt <- tibble(title_dt,body_dt)
     aticles_dt %>%
@@ -120,4 +126,4 @@ for(i in 1:max) {
   
 }
 
-readr::write_excel_csv(aticles_dt,"RM_200201_200314_2")
+readr::write_excel_csv(aticles_dt,"RM_190101_190228_2")
