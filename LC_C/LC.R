@@ -29,7 +29,7 @@ rm(list=ls())
 
 
 # max page check
-tar<-"https://finance.naver.com/news/news_search.nhn?rcdate=&q=%B7%D4%B5%A5%C4%B3%C7%C7%C5%BB&x=0&y=0&sm=all.basic&pd=4&stDateStart=2019-06-01&stDateEnd=2019-07-31&page=1"
+tar<-"https://finance.naver.com/news/news_search.nhn?rcdate=&q=%B7%D4%B5%A5%C4%B3%C7%C7%C5%BB&x=0&y=0&sm=all.basic&pd=4&stDateStart=2020-01-01&stDateEnd=2020-03-15&page=1"
 
 
 max_page <- function(tar_url) {
@@ -50,7 +50,7 @@ root<-"https://finance.naver.com"
 # 사진있는 기사 크롤링
 
 for(i in 1:max) {
-  tar_url<-paste0("https://finance.naver.com/news/news_search.nhn?rcdate=&q=%B7%D4%B5%A5%C4%B3%C7%C7%C5%BB&x=0&y=0&sm=all.basic&pd=4&stDateStart=2019-06-01&stDateEnd=2019-07-31&page=",i)
+  tar_url<-paste0("https://finance.naver.com/news/news_search.nhn?rcdate=&q=%B7%D4%B5%A5%C4%B3%C7%C7%C5%BB&x=0&y=0&sm=all.basic&pd=4&stDateStart=2020-01-01&stDateEnd=2020-03-15&page=",i)
   print(tar_url)
   read_html(tar_url,encoding="CP949") %>%
     html_nodes("dd.articleSubject a") %>%
@@ -83,13 +83,13 @@ for(i in 1:max) {
   
 }
 
-readr::write_excel_csv(aticles_dd,"LC_190601_190731")
+readr::write_excel_csv(aticles_dd,"LC_200101_200315")
 
 # 사진없는 기사 크롤링
 
 
 for(i in 1:max) {
-  tar_url<-paste0("https://finance.naver.com/news/news_search.nhn?rcdate=&q=%B7%D4%B5%A5%C4%B3%C7%C7%C5%BB&x=0&y=0&sm=all.basic&pd=4&stDateStart=2019-06-01&stDateEnd=2019-07-31&page=",i)
+  tar_url<-paste0("https://finance.naver.com/news/news_search.nhn?rcdate=&q=%B7%D4%B5%A5%C4%B3%C7%C7%C5%BB&x=0&y=0&sm=all.basic&pd=4&stDateStart=2020-01-01&stDateEnd=2020-03-15&page=",i)
   print(tar_url)
   if(length(which(!is.na(read_html(tar_url,encoding="CP949") %>%
                          html_nodes("dt.articleSubject a")))) == 0) {
@@ -127,4 +127,4 @@ for(i in 1:max) {
   
 }
 
-readr::write_excel_csv(aticles_dt,"LC_190601_190731_2")
+readr::write_excel_csv(aticles_dt,"LC_200101_200315_2")
